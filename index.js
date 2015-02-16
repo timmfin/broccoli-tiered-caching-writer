@@ -50,7 +50,6 @@ TieredCachingWriter.prototype.prepareInnerFilter = function(options) {
 };
 
 TieredCachingWriter.prototype.updateCache = function (srcDir, destDir) {
-  console.log("TWC updateCache:", srcDir, " -> ", destDir);
   return this.filter.processAllFilesIn(srcDir, destDir);
 };
 
