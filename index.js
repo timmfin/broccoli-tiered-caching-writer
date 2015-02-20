@@ -1,4 +1,8 @@
 var Filter = require('broccoli-filter');
+var mkdirp = require('mkdirp');
+var helpers = require('broccoli-kitchen-sink-helpers');
+var walkSync = require('walk-sync');
+var mapSeries = require('promise-map-series');
 var CachingWriter = require('broccoli-caching-writer');
 
 
@@ -50,7 +54,25 @@ TieredCachingWriter.prototype.prepareInnerFilter = function(options) {
 };
 
 TieredCachingWriter.prototype.updateCache = function (srcDir, destDir) {
-  return this.filter.processAllFilesIn(srcDir, destDir);
+  // In my in-progress broccoli-filter branch, I could just do this...
+  // return this.filter.processAllFilesIn(srcDir, destDir);
+
+  // But just copying out the inner part of BroccoliFilter::write, but I'd rather
+  // not have to copy this (because I have to pull in several deps to do so)
+  var self = this
+  var paths = walkSync(srcDir)
+
+  return mapSeries(paths, function (relativePath) {
+    if (relativePath.slice(-1) === '/') {
+      mkdirp.sync(destDir + '/' + relativePath)
+    } else {
+      if (self.filter.canProcessFile(relativePath)) {
+        return self.filter.processAndCacheFile(srcDir, destDir, relativePath)
+      } else {
+        helpers.copyPreserveSync(srcDir + '/' + relativePath, destDir + '/' + relativePath)
+      }
+    }
+  })
 };
 
 
