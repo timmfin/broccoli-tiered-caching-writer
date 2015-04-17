@@ -1,3 +1,5 @@
+"use strict";
+
 var Filter = require('broccoli-filter');
 var mkdirp = require('mkdirp');
 var helpers = require('broccoli-kitchen-sink-helpers');
@@ -25,7 +27,7 @@ TieredCachingWriter.prototype.prepareInnerFilter = function(options) {
   this.FilterConstructor = this.FilterConstructor || Filter;
 
   // Quick options clone
-  newOptions = {};
+  var newOptions = {};
 
   for (var key in options) {
     if (options.hasOwnProperty(key)) {
@@ -59,20 +61,20 @@ TieredCachingWriter.prototype.updateCache = function (srcDir, destDir) {
 
   // But just copying out the inner part of BroccoliFilter::write, but I'd rather
   // not have to copy this (because I have to pull in several deps to do so)
-  var self = this
-  var paths = walkSync(srcDir)
+  var self = this;
+  var paths = walkSync(srcDir);
 
   return mapSeries(paths, function (relativePath) {
     if (relativePath.slice(-1) === '/') {
-      mkdirp.sync(destDir + '/' + relativePath)
+      mkdirp.sync(destDir + '/' + relativePath);
     } else {
       if (self.filter.canProcessFile(relativePath)) {
-        return self.filter.processAndCacheFile(srcDir, destDir, relativePath)
+        return self.filter.processAndCacheFile(srcDir, destDir, relativePath);
       } else {
-        helpers.copyPreserveSync(srcDir + '/' + relativePath, destDir + '/' + relativePath)
+        helpers.copyPreserveSync(srcDir + '/' + relativePath, destDir + '/' + relativePath);
       }
     }
-  })
+  });
 };
 
 
