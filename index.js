@@ -2,10 +2,10 @@
 
 var Filter = require('broccoli-filter');
 var mkdirp = require('mkdirp');
-var helpers = require('broccoli-kitchen-sink-helpers');
 var walkSync = require('walk-sync');
 var mapSeries = require('promise-map-series');
 var CachingWriter = require('broccoli-caching-writer');
+var symlinkOrCopySync = require('symlink-or-copy').sync;
 
 
 TieredCachingWriter.prototype = Object.create(CachingWriter.prototype);
@@ -44,10 +44,11 @@ TieredCachingWriter.prototype.prepareInnerFilter = function(options) {
     newOptions.targetExtension = this.targetExtension;
   }
 
-  // Intentionally don't pass along the input tree to the composed filter instance,
-  // we'll never be calling `write()` on it. However, still pass through all
+  // Intentionally don't pass along a real input tree to the composed filter
+  // instance, we'll never be calling `write()` on it (and it isn't undefined
+  // because broccoli-filter would throw an error) However, still pass through all
   // other options (with extensions/targetExtensions likely set)
-  this.filter = new this.FilterConstructor(undefined, newOptions);
+  this.filter = new this.FilterConstructor({}, newOptions);
 
   // Make The processString method on this prototype available to the composed filter instance
   if (this.processString !== undefined) {
@@ -71,7 +72,7 @@ TieredCachingWriter.prototype.updateCache = function (srcDir, destDir) {
       if (self.filter.canProcessFile(relativePath)) {
         return self.filter.processAndCacheFile(srcDir, destDir, relativePath);
       } else {
-        helpers.copyPreserveSync(srcDir + '/' + relativePath, destDir + '/' + relativePath);
+        symlinkOrCopySync(srcDir + '/' + relativePath, destDir + '/' + relativePath);
       }
     }
   });

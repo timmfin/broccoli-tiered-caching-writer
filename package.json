@@ -5,11 +5,11 @@
   "main": "index.js",
   "author": "tfinley@hubspot.com",
   "dependencies": {
-    "broccoli-caching-writer": "~0.4.2",
-    "broccoli-filter": "^0.1.11",
-    "broccoli-kitchen-sink-helpers": "^0.2.6",
+    "broccoli-caching-writer": "~0.5.4",
+    "broccoli-filter": "^0.1.12",
     "mkdirp": "^0.5.0",
     "promise-map-series": "^0.2.1",
+    "symlink-or-copy": "^1.0.1",
     "walk-sync": "^0.1.3"
   }
 }
