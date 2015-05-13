@@ -78,5 +78,10 @@ TieredCachingWriter.prototype.updateCache = function (srcDir, destDir) {
   });
 };
 
+TieredCachingWriter.prototype.cleanup = function() {
+  this.filter.cleanup();
+  CachingWriter.prototype.cleanup.call(this);
+}
+
 
 module.exports = TieredCachingWriter;
