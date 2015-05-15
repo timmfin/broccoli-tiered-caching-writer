@@ -8,8 +8,8 @@
     "broccoli-caching-writer": "Needs a specific commit version that is not yet released (after 0.5.5)"
   },
   "dependencies": {
-    "broccoli-caching-writer": "timmfin/broccoli-caching-writer#fix-key-cache-check",
     "broccoli-filter": "^0.1.12",
+    "broccoli-caching-writer": "ember-cli/broccoli-caching-writer#7e7f77914ca3dc664aea1f3a930f353a58813c72",
     "mkdirp": "^0.5.0",
     "promise-map-series": "^0.2.1",
     "symlink-or-copy": "^1.0.1",
